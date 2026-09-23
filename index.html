@@ -502,7 +502,7 @@
       ? `<div class="ad-verdict bad"><b>Punto de barrera: ${esc(a.stage.l)} · ${esc(a.stage.name)}</b><p>${esc(a.stage.fix)}</p></div>`
       : a.kind === "ok"
         ? `<div class="ad-verdict good"><b>Sin punto de barrera.</b><p>Las cinco etapas en 4 o 5. Sigue con el refuerzo.</p></div>`
-        : `<div class="ad-verdict"><b>${a.measured ? `Siguiente por medir: ${esc(a.stage.l)} · ${esc(a.stage.name)}` : "Todavía sin medir"}</b><p>Mídelo en la próxima conversación, de 1 a 5.</p></div>`;
+        : `<div class="ad-verdict"><b>${a.measured ? `Siguiente por medir: ${esc(a.stage.l)} · ${esc(a.stage.name)}` : "Todavía sin medir"}</b><p>Se mide en la próxima reunión, que se graba: Claude saca el puntaje de la grabación. Los botones sirven para corregirlo a mano.</p></div>`;
     return `<section class="block"><p class="eyebrow">Gestión del cambio · ADKAR</p>
       <div class="adkar">
         ${ADKAR.map(s => {
@@ -596,7 +596,7 @@
           <div class="field"><label for="ct-next">Fecha</label><input id="ct-next" type="date" value=""></div>
         </div>
         <div class="field"><label for="ct-que">Qué le vas a aportar</label><input id="ct-que" type="text" placeholder="Un dato, un ejemplo o una idea para su negocio"></div>
-        <p class="hint">Si el cliente sigue abierto, el próximo toque es obligatorio. Después de guardar, actualiza su puntaje ADKAR en la ficha.</p>
+        <p class="hint">Si el cliente sigue abierto, el próximo toque es obligatorio. Si la reunión quedó grabada, pásale la grabación a Claude: él llena la ficha y los puntajes ADKAR.</p>
         <div class="row"><button class="btn" type="submit">Guardar contacto</button><button class="btn ghost" type="button" id="ct-cancel">Cancelar</button></div>
       </form>`);
     document.getElementById("ct-cancel").addEventListener("click", () => { state.mode = "view"; renderSheet(); });
