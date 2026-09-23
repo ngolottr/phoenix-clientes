@@ -1,0 +1,718 @@
+<title>Phoenix Clientes</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Phoenix CRM">
+<meta name="theme-color" content="#1A1614">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caladea:wght@400;700&family=Carlito:wght@400;700&display=swap">
+<style>
+  :root {
+    --ground: #F8F4F1;
+    --surface: #FFFFFF;
+    --surface-2: #F1EAE4;
+    --ink: #1A1614;
+    --ink-2: #5E534D;
+    --ink-3: #8C807A;
+    --line: #E6DCD4;
+    --flame: #F26522;
+    --ember: #C2410C;
+    --glow: #FFC46B;
+    --on-flame: #FFFFFF;
+    --bad: #B83227;
+    --bad-bg: #FBE7E3;
+    --warn: #A95E08;
+    --warn-bg: #FDEFD9;
+    --good: #2F7A4B;
+    --good-bg: #E2F2E7;
+    --info-bg: #EFE8E2;
+    --shadow: 0 8px 28px rgba(26, 22, 20, .10);
+    --radius: 14px;
+    --font-display: "Caladea", Cambria, Georgia, serif;
+    --font-body: "Carlito", Calibri, "Segoe UI", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #14100E; --surface: #1F1916; --surface-2: #2A221E; --ink: #F3ECE6; --ink-2: #C3B6AD; --ink-3: #8F837B;
+      --line: #3A302B; --flame: #FF8A2B; --ember: #FFA95C; --glow: #FFC46B; --on-flame: #1A1614;
+      --bad: #FF8A7D; --bad-bg: #3A1D19; --warn: #FFC46B; --warn-bg: #3A2A14; --good: #7FD39C; --good-bg: #16301F; --info-bg: #2A221E;
+      --shadow: 0 8px 28px rgba(0, 0, 0, .45);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #14100E; --surface: #1F1916; --surface-2: #2A221E; --ink: #F3ECE6; --ink-2: #C3B6AD; --ink-3: #8F837B;
+    --line: #3A302B; --flame: #FF8A2B; --ember: #FFA95C; --glow: #FFC46B; --on-flame: #1A1614;
+    --bad: #FF8A7D; --bad-bg: #3A1D19; --warn: #FFC46B; --warn-bg: #3A2A14; --good: #7FD39C; --good-bg: #16301F; --info-bg: #2A221E;
+    --shadow: 0 8px 28px rgba(0, 0, 0, .45);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { background: var(--ground); }
+  body { margin: 0; color: var(--ink); font: 16px/1.45 var(--font-body); -webkit-font-smoothing: antialiased; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--flame); outline-offset: 2px; border-radius: 6px; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* ---------- barra superior ---------- */
+  .top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--ground); border-bottom: 1px solid var(--line); }
+  .top-in { max-width: 1100px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+  .mark { width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(160deg, #FFC46B 0%, #FF8A2B 38%, #F26522 62%, #C2410C 100%); position: relative; flex: none; }
+  .mark::after { content: ""; position: absolute; inset: 8px 10px 6px; border-radius: 50% 50% 45% 45%; background: rgba(255, 255, 255, .85); clip-path: polygon(50% 0, 100% 70%, 50% 100%, 0 70%); }
+  .brand { display: flex; flex-direction: column; line-height: 1.1; }
+  .brand b { font: 700 18px/1.1 var(--font-display); letter-spacing: .01em; }
+  .brand span { font-size: 12px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .08em; }
+  .tabs-top { margin-left: auto; display: none; gap: 4px; }
+  .tabs-top button { background: none; border: 0; padding: 8px 12px; border-radius: 10px; color: var(--ink-2); font-weight: 700; }
+  .tabs-top button[aria-current="true"] { background: var(--surface-2); color: var(--ink); }
+  .new-top { display: none; }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 16px 16px 110px; }
+  h1 { font: 700 30px/1.1 var(--font-display); margin: 4px 0 2px; text-wrap: balance; }
+  h2 { font: 700 20px/1.2 var(--font-display); margin: 0; text-wrap: balance; }
+  .sub { color: var(--ink-2); margin: 0 0 16px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 8px; }
+
+  /* ---------- resumen ---------- */
+  .sums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 0 22px; }
+  .sum { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+  .sum b { display: block; font: 700 22px/1.1 var(--font-display); }
+  .sum span { font-size: 12px; color: var(--ink-3); }
+
+  .group { margin: 0 0 22px; display: grid; gap: 8px; }
+
+  /* ---------- tarjetas de cliente ---------- */
+  .card { display: grid; grid-template-columns: 6px 1fr auto; gap: 0 12px; align-items: stretch; width: 100%; text-align: left;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 0; overflow: hidden; }
+  .card:hover { border-color: var(--ink-3); }
+  .stripe { background: var(--line); }
+  .stripe.bad { background: var(--bad); } .stripe.warn { background: var(--warn); } .stripe.good { background: var(--good); } .stripe.flame { background: var(--flame); }
+  .card-body { padding: 12px 0; min-width: 0; }
+  .card-name { font: 700 18px/1.2 var(--font-display); }
+  .card-org { color: var(--ink-2); font-size: 14px; overflow-wrap: anywhere; }
+  .card-next { margin-top: 6px; font-size: 14px; color: var(--ink); overflow-wrap: anywhere; }
+  .card-side { padding: 12px 14px 12px 0; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; text-align: right; }
+  .amount { font-weight: 700; font-size: 15px; }
+
+  .pill { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; background: var(--info-bg); color: var(--ink-2); }
+  .pill.bad { background: var(--bad-bg); color: var(--bad); } .pill.warn { background: var(--warn-bg); color: var(--warn); } .pill.good { background: var(--good-bg); color: var(--good); }
+
+  .empty { color: var(--ink-3); padding: 12px 14px; border: 1px dashed var(--line); border-radius: var(--radius); }
+  .notice { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+
+  /* ---------- buscador / filtros ---------- */
+  .tools { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 16px; }
+  .search { flex: 1 1 220px; }
+  input[type="search"], input[type="text"], input[type="tel"], input[type="email"], input[type="date"], input[type="number"], select, textarea {
+    width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-height: 44px; }
+  textarea { min-height: 84px; resize: vertical; }
+  .seg { display: flex; background: var(--surface-2); border-radius: 10px; padding: 3px; gap: 2px; overflow-x: auto; max-width: 100%; }
+  .seg button { border: 0; background: none; padding: 7px 11px; border-radius: 8px; font-weight: 700; color: var(--ink-2); font-size: 14px; }
+  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, .12); }
+
+  /* ---------- embudo ---------- */
+  .funnel { display: grid; gap: 10px; }
+  .stage { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
+  .stage-head { display: flex; align-items: baseline; gap: 10px; }
+  .stage-n { font: 700 13px/1 var(--font-body); color: var(--ink-3); width: 18px; }
+  .stage-title { font-weight: 700; }
+  .stage-meta { margin-left: auto; color: var(--ink-2); font-size: 14px; }
+  .stage-bar { height: 6px; border-radius: 6px; background: var(--surface-2); margin: 10px 0 8px; overflow: hidden; }
+  .stage-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--glow), var(--flame)); border-radius: 6px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { border: 1px solid var(--line); background: var(--surface-2); border-radius: 999px; padding: 4px 10px; font-size: 14px; }
+
+  /* ---------- ADKAR ---------- */
+  .adkar { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 10px; }
+  .ad-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; }
+  .ad-lbl b { display: block; }
+  .ad-lbl b i { font: italic 700 18px/1 var(--font-display); color: var(--flame); margin-right: 6px; }
+  .ad-lbl span { font-size: 13px; color: var(--ink-3); }
+  .ad-dots { display: flex; gap: 5px; }
+  .ad-dots button { width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--line); background: var(--ground); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .ad-dots button[aria-pressed="true"].lo { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .ad-dots button[aria-pressed="true"].hi { background: var(--good); border-color: var(--good); color: #fff; }
+  .ad-dots button:disabled { opacity: .5; }
+  .ad-verdict { border-radius: 12px; padding: 10px 12px; font-size: 15px; background: var(--surface-2); }
+  .ad-verdict.bad { background: var(--bad-bg); }
+  .ad-verdict.good { background: var(--good-bg); }
+  .ad-verdict p { margin: 4px 0 0; font-size: 14px; color: var(--ink-2); }
+  .ad-note { font-size: 14px; color: var(--ink-2); white-space: pre-wrap; overflow-wrap: anywhere; }
+
+  /* ---------- barra inferior (iPhone) ---------- */
+  .tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--surface); border-top: 1px solid var(--line);
+    display: grid; grid-template-columns: repeat(4, 1fr); padding: 6px 8px calc(6px + env(safe-area-inset-bottom)); }
+  .tabbar button { border: 0; background: none; display: grid; justify-items: center; gap: 2px; padding: 6px 0; font-size: 12px; font-weight: 700; color: var(--ink-3); }
+  .tabbar svg { width: 24px; height: 24px; }
+  .tabbar button[aria-current="true"] { color: var(--flame); }
+  .tabbar .plus span { width: 40px; height: 28px; display: grid; place-items: center; border-radius: 10px; background: var(--flame); color: var(--on-flame); }
+
+  /* ---------- hoja de detalle ---------- */
+  .scrim { position: fixed; inset: 0; background: rgba(20, 14, 10, .45); z-index: 10; }
+  .sheet { position: fixed; inset: 0; z-index: 11; background: var(--ground); overflow-y: auto; overscroll-behavior: contain; padding-top: env(safe-area-inset-top, 0px); }
+  .sheet-in { max-width: 680px; margin: 0 auto; padding: 0 16px 40px; }
+  .sheet-top { position: sticky; top: 0; background: var(--ground); display: flex; align-items: center; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--line); z-index: 2; }
+  .icon-btn { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; min-width: 44px; height: 44px; padding: 0 12px; font-weight: 700; }
+  .detail-head { padding: 16px 0 8px; }
+  .detail-head h2 { font-size: 28px; }
+  .actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0 16px; }
+  .action { display: grid; justify-items: center; gap: 3px; padding: 10px 6px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-size: 13px; font-weight: 700; }
+  .action svg { width: 22px; height: 22px; color: var(--flame); }
+  .action[aria-disabled="true"] { opacity: .4; pointer-events: none; }
+
+  .next-box { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); }
+  .next-box .when { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .next-box p { margin: 8px 0 12px; }
+  .btn { border: 0; background: var(--flame); color: var(--on-flame); font-weight: 700; border-radius: 12px; min-height: 46px; padding: 0 16px; }
+  .btn.ghost { background: var(--surface-2); color: var(--ink); }
+  .btn.danger { background: none; color: var(--bad); border: 1px solid var(--line); }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .row > * { flex: 1 1 140px; }
+
+  section.block { margin-top: 22px; }
+  .kv { display: grid; grid-template-columns: minmax(110px, 34%) 1fr; gap: 8px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
+  .kv dt { color: var(--ink-3); font-size: 14px; }
+  .kv dd { margin: 0; overflow-wrap: anywhere; }
+
+  .todo { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+  .todo li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-top: 1px solid var(--line); }
+  .todo li:first-child { border-top: 0; }
+  .todo input[type="checkbox"] { width: 22px; height: 22px; margin-top: 1px; accent-color: var(--flame); flex: none; }
+  .todo label { flex: 1; overflow-wrap: anywhere; }
+  .todo li.done label { color: var(--ink-3); text-decoration: line-through; }
+  .todo .x { border: 0; background: none; color: var(--ink-3); font-size: 20px; line-height: 1; padding: 0 4px; }
+  .add-row { display: flex; gap: 8px; margin-top: 8px; }
+  .add-row input { flex: 1; }
+
+  .log { list-style: none; margin: 0; padding: 0 0 0 14px; border-left: 2px solid var(--line); display: grid; gap: 12px; }
+  .log li { position: relative; }
+  .log li::before { content: ""; position: absolute; left: -20px; top: 7px; width: 10px; height: 10px; border-radius: 50%; background: var(--flame); box-shadow: 0 0 0 3px var(--ground); }
+  .log time { display: block; font-size: 13px; color: var(--ink-3); font-weight: 700; }
+  .log p { margin: 2px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+  form.stack { display: grid; gap: 12px; }
+  .field { display: grid; gap: 5px; }
+  .field label { font-size: 14px; color: var(--ink-2); font-weight: 700; }
+  .hint { font-size: 13px; color: var(--ink-3); }
+  .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(84px + env(safe-area-inset-bottom)); z-index: 20; background: var(--ink); color: var(--ground); padding: 10px 16px; border-radius: 12px; font-weight: 700; box-shadow: var(--shadow); }
+  .sync { font-size: 13px; color: var(--ink-3); margin-top: 28px; }
+  .confirm { background: var(--bad-bg); border-radius: 12px; padding: 12px; display: grid; gap: 8px; }
+
+  @media (max-width: 420px) {
+    .ad-row { grid-template-columns: 1fr; }
+    .ad-dots button { flex: 1; }
+  }
+  @media (min-width: 900px) {
+    .tabs-top { display: flex; }
+    .new-top { display: inline-flex; align-items: center; }
+    .tabbar { display: none; }
+    main { padding-bottom: 40px; }
+    .sheet { left: auto; width: 560px; border-left: 1px solid var(--line); box-shadow: var(--shadow); }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    .toast { bottom: 24px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .sheet { animation: slide .18s ease-out; }
+    @keyframes slide { from { transform: translateY(12px); opacity: .6; } to { transform: none; opacity: 1; } }
+  }
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <div class="mark" aria-hidden="true"></div>
+    <div class="brand"><b>Phoenix Clientes</b><span id="today-label">CRM personal</span></div>
+    <nav class="tabs-top" aria-label="Secciones">
+      <button data-tab="hoy">Hoy</button>
+      <button data-tab="clientes">Clientes</button>
+      <button data-tab="embudo">Embudo</button>
+    </nav>
+    <button class="btn new-top" data-tab="nuevo">+ Nuevo cliente</button>
+  </div>
+</header>
+
+<main id="view">
+  <p class="eyebrow">Cargando</p>
+  <h1>Tus clientes</h1>
+  <p class="sub">Conectando con tu base de datos…</p>
+</main>
+
+<nav class="tabbar" aria-label="Secciones">
+  <button data-tab="hoy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>Hoy</button>
+  <button data-tab="clientes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5M16 4.8a3.3 3.3 0 0 1 0 6.4M18 14.8c1.9.7 3.1 2.4 3.5 5.2"/></svg>Clientes</button>
+  <button data-tab="embudo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h18l-7 8.5V19l-4 2v-8.5z"/></svg>Embudo</button>
+  <button data-tab="nuevo" class="plus"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>Nuevo</button>
+</nav>
+
+<div id="overlay"></div>
+
+<script>
+(() => {
+  const STAGES = ["1 Nuevo lead", "2 Conversación", "3 1ª reunión agendada", "4 1ª reunión hecha", "5 2ª reunión agendada", "6 En decisión", "7 Ganado"];
+  const RESULTS = { abierto: "Abierto", ganado: "Ganado", perdido: "Perdido", nurture: "En pausa" };
+  const CANALES = ["red personal", "referido", "frío", "MVP-first", "marca personal", "web", "otro"];
+  // Entrega del proyecto: no siempre hay fecha. Un evento sin confirmar o un proyecto de meses
+  // no se marca con fecha fija, y nunca aparece como atrasado.
+  const PLAZOS = { "": "Sin definir", fecha: "Fecha confirmada", pronto: "Por confirmar · pronto", largo: "Largo plazo" };
+  // Gestión del cambio (modelo ADKAR). Se mide por etapa de 1 a 5; la primera
+  // con 3 o menos es el punto de barrera. La segunda A se guarda como "H"
+  // (habilidad) para no repetir la clave de Conciencia.
+  const ADKAR = [
+    { k: "adkarA", l: "A", name: "Conciencia", hint: "Ve lo que le cuesta el problema", fix: "Vuelve a los números: que él diga lo que pierde." },
+    { k: "adkarD", l: "D", name: "Deseo", hint: "Quiere cambiar, por razones suyas", fix: "Su motivo personal y bajar el riesgo. Nunca bajes el precio: baja el alcance." },
+    { k: "adkarK", l: "K", name: "Conocimiento", hint: "Sabe cómo se usa", fix: "Capacitación y una guía simple con capturas." },
+    { k: "adkarH", l: "A", name: "Habilidad", hint: "Lo usa en su día real", fix: "Acompañamiento el primer mes; partir con lo mínimo." },
+    { k: "adkarR", l: "R", name: "Refuerzo", hint: "Algo lo sostiene en el tiempo", fix: "Revisión mensual de resultados con él." }
+  ];
+  const clp = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
+
+  const $view = document.getElementById("view");
+  const $overlay = document.getElementById("overlay");
+  const state = { tab: "hoy", clients: [], loaded: false, noDb: false, filter: "abierto", q: "", openId: null, sub: { log: [], todo: [] }, unsubs: [], writing: false };
+  let db = null;
+
+  // ---------- utilidades ----------
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const pad = n => String(n).padStart(2, "0");
+  const isoToday = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
+  const parseISO = s => { if (!s || !/^\d{4}-\d{2}-\d{2}/.test(s)) return null; const [y, m, d] = s.slice(0, 10).split("-").map(Number); return new Date(y, m - 1, d); };
+  const daysFromToday = s => { const d = parseISO(s); if (!d) return null; const t = parseISO(isoToday()); return Math.round((d - t) / 86400000); };
+  const niceDate = s => { const d = parseISO(s); return d ? d.toLocaleDateString("es-CL", { weekday: "short", day: "numeric", month: "short" }) : ""; };
+  const digits = s => String(s || "").replace(/\D/g, "");
+
+  function toqueState(c) {
+    if ((c.resultado || "abierto") !== "abierto") return { cls: "", label: RESULTS[c.resultado] || "Cerrado", stripe: c.resultado === "ganado" ? "good" : "" };
+    const n = daysFromToday(c.proximoToque);
+    if (n === null) return { cls: "warn", label: "Sin próximo toque", stripe: "warn" };
+    if (n < 0) return { cls: "warn", label: "Por retomar", stripe: "warn" };
+    if (n === 0) return { cls: "warn", label: "Hoy", stripe: "flame" };
+    if (n === 1) return { cls: "", label: "Mañana", stripe: "" };
+    return { cls: "", label: niceDate(c.proximoToque), stripe: "" };
+  }
+
+  // Estado ADKAR de un cliente: barrera (primera etapa ≤ 3), siguiente por medir, o completo.
+  function adkarState(c) {
+    const score = s => { const v = Number(c[s.k]); return v >= 1 && v <= 5 ? v : null; };
+    const measured = ADKAR.filter(s => score(s) !== null).length;
+    for (const s of ADKAR) {
+      const v = score(s);
+      if (v === null) return { kind: "pending", stage: s, measured, cls: "", label: measured ? `ADKAR · medir ${s.l}` : "ADKAR sin medir" };
+      if (v <= 3) return { kind: "barrier", stage: s, measured, cls: "bad", label: `Barrera: ${s.l} · ${s.name}` };
+    }
+    return { kind: "ok", stage: null, measured, cls: "good", label: "ADKAR al día" };
+  }
+
+  function entregaLabel(c) {
+    if (c.entregaPlazo === "fecha") return c.entregaFecha ? `Entrega ${niceDate(c.entregaFecha)}` : "";
+    if (c.entregaPlazo === "pronto") return "Entrega por confirmar";
+    if (c.entregaPlazo === "largo") return "Largo plazo";
+    return "";
+  }
+
+  function toast(msg) {
+    const t = document.createElement("div"); t.className = "toast"; t.setAttribute("role", "status"); t.textContent = msg;
+    document.body.appendChild(t); setTimeout(() => t.remove(), 2200);
+  }
+
+  async function write(fn, ok) {
+    try { await fn(); if (ok) toast(ok); return true; }
+    catch (e) {
+      const code = e && e.code;
+      toast(code === "quota_exceeded" ? "La base de datos está llena: borra registros antiguos." : code === "unavailable" ? "Sin conexión. Intenta de nuevo en unos segundos." : "No se pudo guardar. Revisa los datos e intenta otra vez.");
+      console.error(e);
+      return false;
+    }
+  }
+
+  // ---------- navegación ----------
+  function setTab(tab) {
+    if (tab === "nuevo") { openNew(); return; }
+    state.tab = tab;
+    document.querySelectorAll("[data-tab]").forEach(b => b.setAttribute("aria-current", String(b.dataset.tab === tab)));
+    render();
+    window.scrollTo(0, 0);
+  }
+  document.addEventListener("click", e => {
+    const t = e.target.closest("[data-tab]"); if (t) { setTab(t.dataset.tab); return; }
+    const card = e.target.closest("[data-open]"); if (card) { openClient(card.dataset.open); }
+  });
+
+  // ---------- vistas ----------
+  function cardHTML(c) {
+    const st = toqueState(c);
+    const monto = c.monto ? `<span class="amount num">${clp.format(c.monto)}</span>` : "";
+    const next = (c.resultado || "abierto") === "abierto" && c.proximoQue ? `<div class="card-next">${esc(c.proximoQue)}</div>` : "";
+    const ad = (c.resultado || "abierto") === "abierto" ? adkarState(c) : null;
+    return `<button class="card" data-open="${esc(c.id)}">
+      <span class="stripe ${st.stripe}" aria-hidden="true"></span>
+      <span class="card-body">
+        <span class="card-name">${esc(c.nombre)}</span>
+        <span class="card-org" style="display:block">${esc(c.empresa || c.rubro || "")}</span>
+        ${next}
+      </span>
+      <span class="card-side">
+        <span class="pill ${st.cls}">${esc(st.label)}</span>
+        <span class="hint">${esc((c.etapa || "").replace(/^\d\s/, ""))}</span>
+        ${ad ? `<span class="pill ${ad.cls}">${esc(ad.label)}</span>` : ""}
+        ${entregaLabel(c) ? `<span class="hint">${esc(entregaLabel(c))}</span>` : ""}
+        ${monto}
+      </span>
+    </button>`;
+  }
+
+  function renderHoy() {
+    const open = state.clients.filter(c => (c.resultado || "abierto") === "abierto");
+    const due = open.filter(c => { const n = daysFromToday(c.proximoToque); return n !== null && n <= 0; }).sort((a, b) => a.proximoToque.localeCompare(b.proximoToque));
+    const soon = open.filter(c => { const n = daysFromToday(c.proximoToque); return n !== null && n > 0 && n <= 7; }).sort((a, b) => a.proximoToque.localeCompare(b.proximoToque));
+    const none = open.filter(c => daysFromToday(c.proximoToque) === null);
+    const later = open.filter(c => { const n = daysFromToday(c.proximoToque); return n !== null && n > 7; });
+    const enPropuesta = open.filter(c => c.etapa === "6 En decisión").reduce((s, c) => s + (+c.monto || 0), 0);
+    const ganado = state.clients.filter(c => c.resultado === "ganado").reduce((s, c) => s + (+c.monto || 0), 0);
+    const hoy = new Date().toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "long" });
+    const sec = (title, list, emptyMsg) => `<section class="group" aria-label="${esc(title)}"><p class="eyebrow">${esc(title)} · ${list.length}</p>${list.length ? list.map(cardHTML).join("") : `<div class="empty">${emptyMsg}</div>`}</section>`;
+    $view.innerHTML = `
+      <p class="eyebrow">${esc(hoy)}</p>
+      <h1>${due.length ? `Hoy te toca hablar con ${due.length === 1 ? "1 cliente" : due.length + " clientes"}` : "Nada vencido hoy"}</h1>
+      <p class="sub">Regla de la casa: ningún cliente abierto sin próximo toque, y cada uno con su etapa ADKAR medida.</p>
+      <div class="sums">
+        <div class="sum"><b class="num">${open.length}</b><span>Abiertos</span></div>
+        <div class="sum"><b class="num">${clp.format(enPropuesta)}</b><span>En propuesta</span></div>
+        <div class="sum"><b class="num">${clp.format(ganado)}</b><span>Ganado</span></div>
+      </div>
+      <div class="grid-2">
+        <div>
+          ${sec("Para hoy o por retomar", due, "Al día. Aprovecha de prospectar.")}
+          ${none.length ? sec("Sin próximo toque", none, "") : ""}
+        </div>
+        <div>
+          ${sec("Próximos 7 días", soon, "Nada agendado esta semana.")}
+          ${later.length ? sec("Más adelante", later, "") : ""}
+        </div>
+      </div>
+      <p class="sync">Versión 2 · con gestión del cambio ADKAR. Los cambios quedan guardados en esta app. Para pasarlos a Neurona, dile a Claude: "sincroniza el CRM".</p>`;
+  }
+
+  function renderClientes() {
+    const q = state.q.trim().toLowerCase();
+    const list = state.clients
+      .filter(c => state.filter === "todos" || (c.resultado || "abierto") === state.filter)
+      .filter(c => !q || [c.nombre, c.empresa, c.rubro, c.ciudad, c.telefono, c.email].join(" ").toLowerCase().includes(q))
+      .sort((a, b) => (a.proximoToque || "9999").localeCompare(b.proximoToque || "9999"));
+    const segBtn = (v, l) => `<button type="button" data-filter="${v}" aria-pressed="${state.filter === v}">${l}</button>`;
+    $view.innerHTML = `
+      <p class="eyebrow">${state.clients.length} en total</p>
+      <h1>Clientes</h1>
+      <div class="tools">
+        <div class="search"><label for="q" class="hint" style="display:none">Buscar</label><input id="q" type="search" placeholder="Buscar por nombre, empresa o teléfono" value="${esc(state.q)}"></div>
+        <div class="seg" role="group" aria-label="Filtrar">${segBtn("abierto", "Abiertos")}${segBtn("ganado", "Ganados")}${segBtn("nurture", "En pausa")}${segBtn("perdido", "Perdidos")}${segBtn("todos", "Todos")}</div>
+      </div>
+      <div class="group">${list.length ? list.map(cardHTML).join("") : `<div class="empty">No hay clientes con ese filtro.</div>`}</div>`;
+    const qi = document.getElementById("q");
+    qi.addEventListener("input", () => { state.q = qi.value; const pos = qi.selectionStart; renderClientes(); const n = document.getElementById("q"); n.focus(); n.setSelectionRange(pos, pos); });
+    $view.querySelectorAll("[data-filter]").forEach(b => b.addEventListener("click", () => { state.filter = b.dataset.filter; renderClientes(); }));
+  }
+
+  function renderEmbudo() {
+    const open = state.clients.filter(c => (c.resultado || "abierto") === "abierto" || c.resultado === "ganado");
+    const max = Math.max(1, ...STAGES.map(s => open.filter(c => c.etapa === s).length));
+    const closed = state.clients.filter(c => c.resultado === "perdido" || c.resultado === "nurture");
+    const abiertos = state.clients.filter(c => (c.resultado || "abierto") === "abierto");
+    const trabados = ADKAR.map(s => ({ s, cs: abiertos.filter(c => { const a = adkarState(c); return a.kind === "barrier" && a.stage.k === s.k; }) }));
+    const sinMedir = abiertos.filter(c => adkarState(c).measured === 0);
+    $view.innerHTML = `
+      <p class="eyebrow">Dónde está cada venta</p>
+      <h1>Embudo</h1>
+      <p class="sub">Si una etapa acumula clientes, ahí está la fuga.</p>
+      <div class="funnel">
+        ${STAGES.map(s => {
+          const cs = open.filter(c => c.etapa === s);
+          const total = cs.reduce((a, c) => a + (+c.monto || 0), 0);
+          const [n, ...rest] = s.split(" ");
+          return `<div class="stage">
+            <div class="stage-head"><span class="stage-n num">${n}</span><span class="stage-title">${esc(rest.join(" "))}</span><span class="stage-meta num">${cs.length}${total ? " · " + clp.format(total) : ""}</span></div>
+            <div class="stage-bar" aria-hidden="true"><i style="width:${cs.length / max * 100}%"></i></div>
+            <div class="chips">${cs.map(c => `<button class="chip" data-open="${esc(c.id)}">${esc(c.nombre)}</button>`).join("") || `<span class="hint">—</span>`}</div>
+          </div>`;
+        }).join("")}
+        <div class="stage"><div class="stage-head"><span class="stage-n">·</span><span class="stage-title">Perdidos y en pausa</span><span class="stage-meta num">${closed.length}</span></div>
+          <div class="chips" style="margin-top:8px">${closed.map(c => `<button class="chip" data-open="${esc(c.id)}">${esc(c.nombre)}</button>`).join("") || `<span class="hint">—</span>`}</div></div>
+      </div>
+
+      <p class="eyebrow" style="margin-top:26px">Gestión del cambio · ADKAR</p>
+      <h2 style="margin-bottom:6px">Dónde se traba el cambio</h2>
+      <p class="sub">Clientes abiertos según su punto de barrera: la primera etapa con 3 o menos.</p>
+      <div class="funnel">
+        ${trabados.map(({ s, cs }) => `<div class="stage">
+          <div class="stage-head"><span class="stage-n">${s.l}</span><span class="stage-title">${esc(s.name)}</span><span class="stage-meta num">${cs.length}</span></div>
+          <div class="chips" style="margin-top:8px">${cs.map(c => `<button class="chip" data-open="${esc(c.id)}">${esc(c.nombre)}</button>`).join("") || `<span class="hint">—</span>`}</div>
+        </div>`).join("")}
+        <div class="stage"><div class="stage-head"><span class="stage-n">·</span><span class="stage-title">Sin medir todavía</span><span class="stage-meta num">${sinMedir.length}</span></div>
+          <div class="chips" style="margin-top:8px">${sinMedir.map(c => `<button class="chip" data-open="${esc(c.id)}">${esc(c.nombre)}</button>`).join("") || `<span class="hint">—</span>`}</div></div>
+      </div>`;
+  }
+
+  function render() {
+    if (state.noDb) {
+      $view.innerHTML = `<p class="eyebrow">Sin conexión a la base de datos</p><h1>Abre Phoenix Clientes desde tu cuenta de Claude</h1>
+        <div class="notice"><p>Esta app guarda tus clientes en tu cuenta. Ábrela desde claude.ai con tu sesión iniciada (en el iPhone, desde Safari) para ver y editar tus datos.</p></div>`;
+      return;
+    }
+    if (!state.loaded) return;
+    ({ hoy: renderHoy, clientes: renderClientes, embudo: renderEmbudo })[state.tab]();
+    if (state.openId && state.mode === "view") renderSheet();
+  }
+
+  // ---------- detalle ----------
+  const icons = {
+    tel: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h3.5l2 5-2.5 1.5a11 11 0 0 0 6.5 6.5L16 13.5l5 2V19a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg>`,
+    wa: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.6a8.5 8.5 0 0 1-12.6 7.5L3.5 20.5l1.4-4.2A8.5 8.5 0 1 1 20.5 11.6z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2-1-1 .8a4.5 4.5 0 0 1-2.2-2.2l.8-1-1-2z"/></svg>`,
+    mail: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>`
+  };
+
+  function subscribeSub(id) {
+    state.unsubs.forEach(u => u()); state.unsubs = [];
+    state.sub = { log: [], todo: [] };
+    const ref = db.collection("clientes").doc(id);
+    state.unsubs.push(ref.collection("bitacora").onSnapshot(s => { state.sub.log = s.docs.map(d => ({ id: d.id, ...d.data() })); if (state.openId === id && state.mode === "view") renderSheet(); }, e => console.error(e)));
+    state.unsubs.push(ref.collection("pendientes").onSnapshot(s => { state.sub.todo = s.docs.map(d => ({ id: d.id, ...d.data() })); if (state.openId === id && state.mode === "view") renderSheet(); }, e => console.error(e)));
+  }
+
+  function openClient(id) {
+    state.openId = id; state.mode = "view";
+    subscribeSub(id);
+    renderSheet();
+  }
+  function closeSheet() {
+    state.openId = null; state.mode = null; state.unsubs.forEach(u => u()); state.unsubs = [];
+    $overlay.innerHTML = ""; document.body.style.overflow = "";
+  }
+
+  function sheetShell(title, inner) {
+    $overlay.innerHTML = `<div class="scrim" data-close></div>
+      <div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="sheet-in">
+        <div class="sheet-top"><button class="icon-btn" data-close aria-label="Cerrar">← Volver</button><span style="margin-left:auto" class="hint">${esc(title)}</span></div>
+        ${inner}
+      </div></div>`;
+    document.body.style.overflow = "hidden";
+    $overlay.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", closeSheet));
+  }
+
+  function adkarHTML(c) {
+    const a = adkarState(c);
+    const verdict = a.kind === "barrier"
+      ? `<div class="ad-verdict bad"><b>Punto de barrera: ${esc(a.stage.l)} · ${esc(a.stage.name)}</b><p>${esc(a.stage.fix)}</p></div>`
+      : a.kind === "ok"
+        ? `<div class="ad-verdict good"><b>Sin punto de barrera.</b><p>Las cinco etapas en 4 o 5. Sigue con el refuerzo.</p></div>`
+        : `<div class="ad-verdict"><b>${a.measured ? `Siguiente por medir: ${esc(a.stage.l)} · ${esc(a.stage.name)}` : "Todavía sin medir"}</b><p>Mídelo en la próxima conversación, de 1 a 5.</p></div>`;
+    return `<section class="block"><p class="eyebrow">Gestión del cambio · ADKAR</p>
+      <div class="adkar">
+        ${ADKAR.map(s => {
+          const v = Number(c[s.k]);
+          return `<div class="ad-row">
+            <div class="ad-lbl"><b><i>${s.l}</i>${esc(s.name)}</b><span>${esc(s.hint)}</span></div>
+            <div class="ad-dots" role="group" aria-label="Puntaje de ${esc(s.name)}">
+              ${[1, 2, 3, 4, 5].map(n => `<button type="button" class="${n <= 3 ? "lo" : "hi"}" data-adkar="${s.k}" data-v="${n}" aria-pressed="${v === n}" ${state.writing ? "disabled" : ""}>${n}</button>`).join("")}
+            </div>
+          </div>`;
+        }).join("")}
+        ${verdict}
+        ${c.adkarNota ? `<div><p class="eyebrow" style="margin:4px 0">Personas del cambio y notas</p><div class="ad-note">${esc(c.adkarNota)}</div></div>` : `<p class="hint" style="margin:0">Anota en "Editar datos" quiénes tienen que cambiar su forma de trabajar (el dueño, su equipo, sus clientes).</p>`}
+      </div>
+    </section>`;
+  }
+
+  function renderSheet() {
+    const c = state.clients.find(x => x.id === state.openId);
+    if (!c) { closeSheet(); return; }
+    const prevScroll = $overlay.querySelector(".sheet")?.scrollTop || 0;
+    if (state.mode === "edit") return renderEdit(c);
+    if (state.mode === "contact") return renderContact(c);
+    const st = toqueState(c);
+    const wa = digits(c.telefono);
+    const todos = [...state.sub.todo].sort((a, b) => (a.orden ?? 0) - (b.orden ?? 0));
+    const log = [...state.sub.log].sort((a, b) => (b.fecha || "").localeCompare(a.fecha || "") || (b.creado || "").localeCompare(a.creado || ""));
+    const kv = [["Etapa", c.etapa], ["Estado", RESULTS[c.resultado || "abierto"]], ["Decide", c.decisor], ["Rubro", c.rubro], ["Ciudad", c.ciudad], ["Canal", c.canal], ["Dolor", c.dolor], ["Solución", c.solucion], ["Próxima reunión", c.proximaReunion], ["Entrega", c.entregaPlazo ? (c.entregaPlazo === "fecha" ? niceDate(c.entregaFecha) : PLAZOS[c.entregaPlazo]) + (c.entregaNota ? ` · ${c.entregaNota}` : "") : ""], ["Último contacto", c.ultimoContacto ? niceDate(c.ultimoContacto) : ""], ["Monto", c.monto ? clp.format(c.monto) + (c.mensualidad ? ` + ${clp.format(c.mensualidad)}/mes` : "") : ""], ["Vence", c.venceEl ? niceDate(c.venceEl) : ""], ["Notas", c.notas]]
+      .filter(([, v]) => v);
+    sheetShell(c.nombre, `
+      <div class="detail-head">
+        <p class="eyebrow">${esc(c.empresa || c.rubro || "")}</p>
+        <h2>${esc(c.nombre)}</h2>
+      </div>
+      <div class="actions">
+        <a class="action" href="tel:+${wa}" aria-disabled="${!wa}">${icons.tel}Llamar</a>
+        <a class="action" href="https://wa.me/${wa}" target="_blank" rel="noopener" aria-disabled="${!wa}">${icons.wa}WhatsApp</a>
+        <a class="action" href="mailto:${esc(c.email || "")}" aria-disabled="${!c.email}">${icons.mail}Correo</a>
+      </div>
+      ${(c.resultado || "abierto") === "abierto" ? `
+      <div class="next-box">
+        <div class="when"><span class="eyebrow" style="margin:0">Próximo toque</span><span class="pill ${st.cls}">${esc(st.label)}</span><span class="hint num">${esc(niceDate(c.proximoToque))}</span></div>
+        <p>${esc(c.proximoQue || "Define qué le vas a aportar en el próximo contacto.")}</p>
+        <div class="row"><button class="btn" id="btn-contact">Registrar contacto</button><button class="btn ghost" id="btn-edit">Editar datos</button></div>
+      </div>` : `<div class="row"><button class="btn ghost" id="btn-edit">Editar datos</button></div>`}
+
+      ${adkarHTML(c)}
+
+      <section class="block"><p class="eyebrow">Pendientes · ${todos.filter(t => !t.hecho).length} por hacer</p>
+        ${todos.length ? `<ul class="todo">${todos.map(t => `<li class="${t.hecho ? "done" : ""}"><input type="checkbox" id="t-${esc(t.id)}" data-todo="${esc(t.id)}" ${t.hecho ? "checked" : ""}><label for="t-${esc(t.id)}">${esc(t.texto)}</label><button class="x" data-deltodo="${esc(t.id)}" aria-label="Borrar pendiente">×</button></li>`).join("")}</ul>` : `<div class="empty">Sin pendientes.</div>`}
+        <form class="add-row" id="add-todo"><input id="new-todo" type="text" placeholder="Agregar pendiente" autocomplete="off"><button class="btn ghost" type="submit">Agregar</button></form>
+      </section>
+
+      <section class="block"><p class="eyebrow">Datos</p><dl class="kv">${kv.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl></section>
+
+      <section class="block"><p class="eyebrow">Bitácora · ${log.length}</p>
+        ${log.length ? `<ol class="log">${log.map(l => `<li><time class="num">${esc(niceDate(l.fecha))}</time><p>${esc(l.texto)}</p></li>`).join("")}</ol>` : `<div class="empty">Todavía no hay registros.</div>`}
+      </section>
+    `);
+    const sheet = $overlay.querySelector(".sheet"); if (sheet) sheet.scrollTop = prevScroll;
+    const ref = db.collection("clientes").doc(c.id);
+    document.getElementById("btn-edit")?.addEventListener("click", () => { state.mode = "edit"; renderSheet(); });
+    document.getElementById("btn-contact")?.addEventListener("click", () => { state.mode = "contact"; renderSheet(); });
+    $overlay.querySelectorAll("[data-adkar]").forEach(b => b.addEventListener("click", async () => {
+      if (state.writing) return;
+      const k = b.dataset.adkar, v = Number(b.dataset.v);
+      const next = Number(c[k]) === v ? null : v; // tocar el mismo número lo borra
+      state.writing = true; renderSheet();
+      await write(() => ref.update({ [k]: next, adkarActualizado: isoToday(), actualizado: isoToday() }));
+      state.writing = false; renderSheet();
+    }));
+    $overlay.querySelectorAll("[data-todo]").forEach(cb => cb.addEventListener("change", () => write(() => ref.collection("pendientes").doc(cb.dataset.todo).update({ hecho: cb.checked }))));
+    $overlay.querySelectorAll("[data-deltodo]").forEach(b => b.addEventListener("click", () => write(() => ref.collection("pendientes").doc(b.dataset.deltodo).delete(), "Pendiente borrado")));
+    document.getElementById("add-todo").addEventListener("submit", e => {
+      e.preventDefault(); const inp = document.getElementById("new-todo"); const txt = inp.value.trim(); if (!txt) return;
+      const orden = Math.max(0, ...state.sub.todo.map(t => t.orden || 0)) + 1;
+      write(() => ref.collection("pendientes").add({ texto: txt, hecho: false, orden }), "Pendiente agregado"); inp.value = "";
+    });
+  }
+
+  function renderContact(c) {
+    sheetShell(c.nombre, `
+      <div class="detail-head"><p class="eyebrow">Registrar contacto</p><h2>${esc(c.nombre)}</h2></div>
+      <form class="stack" id="f-contact">
+        <div class="field"><label for="ct-fecha">Fecha</label><input id="ct-fecha" type="date" value="${isoToday()}" required></div>
+        <div class="field"><label for="ct-texto">¿Qué pasó?</label><textarea id="ct-texto" required placeholder="Ej.: Le escribí por WhatsApp; dijo que su jefe lo revisa el jueves."></textarea></div>
+        <div class="field"><label for="ct-etapa">Etapa</label><select id="ct-etapa">${STAGES.map(s => `<option ${s === c.etapa ? "selected" : ""}>${s}</option>`).join("")}</select></div>
+        <div class="field"><label for="ct-res">Estado</label><select id="ct-res">${Object.entries(RESULTS).map(([k, v]) => `<option value="${k}" ${k === (c.resultado || "abierto") ? "selected" : ""}>${v}</option>`).join("")}</select></div>
+        <p class="eyebrow" style="margin-top:6px">Próximo toque</p>
+        <div class="row">
+          <div class="field"><label for="ct-next">Fecha</label><input id="ct-next" type="date" value=""></div>
+        </div>
+        <div class="field"><label for="ct-que">Qué le vas a aportar</label><input id="ct-que" type="text" placeholder="Un dato, un ejemplo o una idea para su negocio"></div>
+        <p class="hint">Si el cliente sigue abierto, el próximo toque es obligatorio. Después de guardar, actualiza su puntaje ADKAR en la ficha.</p>
+        <div class="row"><button class="btn" type="submit">Guardar contacto</button><button class="btn ghost" type="button" id="ct-cancel">Cancelar</button></div>
+      </form>`);
+    document.getElementById("ct-cancel").addEventListener("click", () => { state.mode = "view"; renderSheet(); });
+    document.getElementById("f-contact").addEventListener("submit", async e => {
+      e.preventDefault();
+      const fecha = document.getElementById("ct-fecha").value, texto = document.getElementById("ct-texto").value.trim();
+      const res = document.getElementById("ct-res").value, next = document.getElementById("ct-next").value, que = document.getElementById("ct-que").value.trim();
+      if (res === "abierto" && (!next || !que)) { toast("Falta el próximo toque: fecha y qué le aportas."); return; }
+      const ref = db.collection("clientes").doc(c.id);
+      await write(async () => {
+        await ref.collection("bitacora").add({ fecha, texto, creado: new Date().toISOString() });
+        const patch = { ultimoContacto: fecha, etapa: document.getElementById("ct-etapa").value, resultado: res, actualizado: isoToday() };
+        if (res === "abierto") { patch.proximoToque = next; patch.proximoQue = que; }
+        await ref.update(patch);
+      }, "Contacto guardado");
+      state.mode = "view"; renderSheet();
+    });
+  }
+
+  function formFields(c = {}) {
+    const f = (id, label, type = "text", val = "", extra = "") => `<div class="field"><label for="${id}">${label}</label><input id="${id}" type="${type}" value="${esc(val ?? "")}" ${extra}></div>`;
+    return `
+      ${f("e-nombre", "Nombre del cliente", "text", c.nombre, "required")}
+      ${f("e-empresa", "Empresa o proyecto", "text", c.empresa)}
+      <div class="row">${f("e-telefono", "Teléfono", "tel", c.telefono, 'placeholder="+56 9 1234 5678"')}${f("e-email", "Correo", "email", c.email)}</div>
+      <div class="row">
+        <div class="field"><label for="e-etapa">Etapa</label><select id="e-etapa">${STAGES.map(s => `<option ${s === (c.etapa || STAGES[0]) ? "selected" : ""}>${s}</option>`).join("")}</select></div>
+        <div class="field"><label for="e-res">Estado</label><select id="e-res">${Object.entries(RESULTS).map(([k, v]) => `<option value="${k}" ${k === (c.resultado || "abierto") ? "selected" : ""}>${v}</option>`).join("")}</select></div>
+      </div>
+      <div class="row">${f("e-next", "Próximo toque", "date", c.proximoToque)}${f("e-reunion", "Próxima reunión", "text", c.proximaReunion, 'placeholder="mié 23/09 19:30"')}</div>
+      ${f("e-que", "Qué le vas a aportar", "text", c.proximoQue)}
+      <div class="row">
+        <div class="field"><label for="e-plazo">Entrega del proyecto</label><select id="e-plazo">${Object.entries(PLAZOS).map(([k, v]) => `<option value="${k}" ${k === (c.entregaPlazo || "") ? "selected" : ""}>${v}</option>`).join("")}</select></div>
+        ${f("e-entrega", "Fecha de entrega (solo si está confirmada)", "date", c.entregaFecha)}
+      </div>
+      ${f("e-entrega-nota", "Nota de la entrega", "text", c.entregaNota, 'placeholder="Ej.: el cliente confirma la fecha del evento"')}
+      <div class="row">${f("e-rubro", "Rubro", "text", c.rubro)}${f("e-ciudad", "Ciudad", "text", c.ciudad)}</div>
+      <div class="row">
+        <div class="field"><label for="e-canal">¿Cómo llegó?</label><select id="e-canal"><option value="">Sin definir</option>${CANALES.map(x => `<option ${x === c.canal ? "selected" : ""}>${x}</option>`).join("")}</select></div>
+        ${f("e-decisor", "Quién decide", "text", c.decisor)}
+      </div>
+      <div class="field"><label for="e-dolor">Dolor principal (con sus palabras)</label><textarea id="e-dolor">${esc(c.dolor || "")}</textarea></div>
+      <div class="field"><label for="e-solucion">Solución que le propones</label><textarea id="e-solucion">${esc(c.solucion || "")}</textarea></div>
+      <div class="field"><label for="e-adkar-nota">Gestión del cambio (ADKAR): quiénes tienen que cambiar y qué los frena</label><textarea id="e-adkar-nota" placeholder="Ej.: el dueño decide y usa la agenda; sus clientes tienen que aprender a reservar. Barrera probable: D, miedo a perder a los de siempre.">${esc(c.adkarNota || "")}</textarea><span class="hint">Los puntajes de 1 a 5 se marcan en la ficha, en la sección ADKAR.</span></div>
+      <div class="row">${f("e-monto", "Monto (CLP)", "number", c.monto, 'inputmode="numeric" min="0" step="1"')}${f("e-mens", "Mensualidad (CLP)", "number", c.mensualidad, 'inputmode="numeric" min="0" step="1"')}</div>
+      ${f("e-vence", "Vence la propuesta", "date", c.venceEl)}
+      <div class="field"><label for="e-notas">Notas</label><textarea id="e-notas">${esc(c.notas || "")}</textarea></div>`;
+  }
+  function readForm() {
+    const v = id => document.getElementById(id).value.trim();
+    const n = id => { const x = v(id); return x === "" ? null : Math.round(Number(x)); };
+    return { nombre: v("e-nombre"), empresa: v("e-empresa"), telefono: v("e-telefono"), email: v("e-email"), etapa: v("e-etapa"), resultado: v("e-res"),
+      proximoToque: v("e-next"), proximaReunion: v("e-reunion"), proximoQue: v("e-que"), rubro: v("e-rubro"), ciudad: v("e-ciudad"), canal: v("e-canal"),
+      decisor: v("e-decisor"), entregaPlazo: v("e-plazo"), entregaFecha: v("e-plazo") === "fecha" ? v("e-entrega") : "", entregaNota: v("e-entrega-nota"), dolor: v("e-dolor"), solucion: v("e-solucion"), adkarNota: v("e-adkar-nota"), monto: n("e-monto"), mensualidad: n("e-mens"), venceEl: v("e-vence"), notas: v("e-notas"), actualizado: isoToday() };
+  }
+
+  function renderEdit(c) {
+    sheetShell(c.nombre, `
+      <div class="detail-head"><p class="eyebrow">Editar datos</p><h2>${esc(c.nombre)}</h2></div>
+      <form class="stack" id="f-edit">${formFields(c)}
+        <div class="row"><button class="btn" type="submit">Guardar cambios</button><button class="btn ghost" type="button" id="ed-cancel">Cancelar</button></div>
+        <button class="btn danger" type="button" id="ed-del">Borrar este cliente</button>
+        <div class="confirm" id="ed-confirm" hidden>
+          <b>¿Borrar a ${esc(c.nombre)}? No se puede deshacer.</b>
+          <div class="row"><button class="btn danger" type="button" id="ed-del-yes">Sí, borrar</button><button class="btn ghost" type="button" id="ed-del-no">No, volver</button></div>
+        </div>
+      </form>`);
+    document.getElementById("ed-cancel").addEventListener("click", () => { state.mode = "view"; renderSheet(); });
+    document.getElementById("f-edit").addEventListener("submit", async e => {
+      e.preventDefault(); const data = readForm();
+      if (data.resultado === "abierto" && (!data.proximoToque || !data.proximoQue)) { toast("Falta el próximo toque: fecha y qué le aportas."); return; }
+      await write(() => db.collection("clientes").doc(c.id).update(data), "Cambios guardados");
+      state.mode = "view"; renderSheet();
+    });
+    // El visor no muestra confirm(): la confirmación va dentro de la página.
+    document.getElementById("ed-del").addEventListener("click", () => { document.getElementById("ed-confirm").hidden = false; });
+    document.getElementById("ed-del-no").addEventListener("click", () => { document.getElementById("ed-confirm").hidden = true; });
+    document.getElementById("ed-del-yes").addEventListener("click", async () => {
+      await write(() => db.collection("clientes").doc(c.id).delete(), "Cliente borrado");
+      closeSheet();
+    });
+  }
+
+  function openNew() {
+    if (!db) { toast("Abre la app desde claude.ai para agregar clientes."); return; }
+    state.openId = null;
+    sheetShell("Nuevo cliente", `
+      <div class="detail-head"><p class="eyebrow">Nuevo cliente</p><h2>¿A quién captaste?</h2></div>
+      <form class="stack" id="f-new">${formFields({ etapa: STAGES[0], resultado: "abierto", proximoToque: isoToday() })}
+        <div class="row"><button class="btn" type="submit">Agregar cliente</button><button class="btn ghost" type="button" data-close>Cancelar</button></div>
+      </form>`);
+    $overlay.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", closeSheet));
+    document.getElementById("f-new").addEventListener("submit", async e => {
+      e.preventDefault(); const data = readForm();
+      if (!data.nombre) { toast("Escribe el nombre del cliente."); return; }
+      if (data.resultado === "abierto" && (!data.proximoToque || !data.proximoQue)) { toast("Falta el próximo toque: fecha y qué le aportas."); return; }
+      data.creado = isoToday(); data.moneda = "CLP";
+      ADKAR.forEach(s => { data[s.k] = null; });
+      let ref;
+      await write(async () => { ref = await db.collection("clientes").add(data); await ref.collection("bitacora").add({ fecha: isoToday(), texto: "Cliente ingresado al CRM.", creado: new Date().toISOString() }); }, "Cliente agregado");
+      if (ref) openClient(ref.id); else closeSheet();
+    });
+  }
+
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && $overlay.innerHTML) closeSheet(); });
+
+  // ---------- arranque ----------
+  document.getElementById("today-label").textContent = new Date().toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "short" });
+  setTab("hoy");
+  (async () => {
+    try { db = window.claude ? await window.claude.use("db") : null; } catch (e) { db = null; }
+    if (!db) { state.noDb = true; render(); return; }
+    db.collection("clientes").onSnapshot(snap => {
+      state.clients = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      state.loaded = true; render();
+    }, err => { console.error(err); state.noDb = true; render(); });
+  })();
+})();
+</script>
